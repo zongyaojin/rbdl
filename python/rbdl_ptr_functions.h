@@ -78,7 +78,7 @@ void UpdateKinematicsCustomPtr (Model &model,
                                 const double *qddot_ptr
                                )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -118,7 +118,7 @@ void UpdateKinematicsCustomPtr (Model &model,
         model.v[i] = model.v_J[i];
         model.c[i] = model.c_J[i] + crossm(model.v[i],model.v_J[i]);
       }
-      // LOG << "v[" << i << "] = " << model.v[i].transpose() << std::endl;
+      // RBDL_LOG << "v[" << i << "] = " << model.v[i].transpose() << std::endl;
     }
 
   }
@@ -177,7 +177,7 @@ void CalcPointJacobianPtr (
   bool update_kinematics
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -252,7 +252,7 @@ void CalcPointJacobian6DPtr (
   bool update_kinematics
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -325,7 +325,7 @@ void CalcBodySpatialJacobianPtr (
   bool update_kinematics
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -400,7 +400,7 @@ void InverseDynamicsPtr (
   std::vector<Math::SpatialVector> *f_ext
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -530,7 +530,7 @@ void InverseDynamicsConstraintsPtr (
   std::vector<Math::SpatialVector> *f_ext
 )
 {
-  LOG << "-------- " << __func__ << " ------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " ------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -612,7 +612,7 @@ void InverseDynamicsConstraintsRelaxedPtr(
   bool update_kinematics,
   std::vector<Math::SpatialVector> *f_ext)
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
   VectorNdRef Q = VectorFromPtr(const_cast<double*>(q_ptr), model.q_size);
@@ -742,7 +742,7 @@ bool isConstrainedSystemFullyActuated (
         ConstraintSet& CS,
         bool update_kinematics,
         std::vector<Math::SpatialVector> *f_ext){
-  LOG << "-------- " << __func__ << " ------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " ------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -786,7 +786,7 @@ void NonlinearEffectsPtr (
   const double *tau_ptr
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -901,9 +901,9 @@ inline void CompositeRigidBodyAlgorithmPtr (
           } else if (model.mJoints[j].mDoFCount == 3) {
             Vector3d H_temp2 =
               (F.transpose() * model.multdof3_S[j]).transpose();
-            LOG << F.transpose() << std::endl
+            RBDL_LOG << F.transpose() << std::endl
                 << model.multdof3_S[j] << std::endl;
-            LOG << H_temp2.transpose() << std::endl;
+            RBDL_LOG << H_temp2.transpose() << std::endl;
 
             H.block<1,3>(dof_index_i,dof_index_j) = H_temp2.transpose();
             H.block<3,1>(dof_index_j,dof_index_i) = H_temp2;
@@ -914,11 +914,11 @@ inline void CompositeRigidBodyAlgorithmPtr (
           VectorNd H_temp2    =
             (F.transpose() * model.mCustomJoints[k]->S).transpose();
 
-          LOG << F.transpose()
+          RBDL_LOG << F.transpose()
               << std::endl
               << model.mCustomJoints[j]->S << std::endl;
 
-          LOG << H_temp2.transpose() << std::endl;
+          RBDL_LOG << H_temp2.transpose() << std::endl;
 
           H.block(dof_index_i,dof_index_j,1,dof) = H_temp2.transpose();
           H.block(dof_index_j,dof_index_i,dof,1) = H_temp2;
@@ -1016,7 +1016,7 @@ void ForwardDynamicsPtr (
   std::vector<Math::SpatialVector> *f_ext
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -1032,10 +1032,10 @@ void ForwardDynamicsPtr (
 
   unsigned int i = 0;
 
-  LOG << "Q          = " << Q.transpose() << std::endl;
-  LOG << "QDot       = " << QDot.transpose() << std::endl;
-  LOG << "Tau        = " << Tau.transpose() << std::endl;
-  LOG << "---" << std::endl;
+  RBDL_LOG << "Q          = " << Q.transpose() << std::endl;
+  RBDL_LOG << "QDot       = " << QDot.transpose() << std::endl;
+  RBDL_LOG << "Tau        = " << Tau.transpose() << std::endl;
+  RBDL_LOG << "---" << std::endl;
 
   // Reset the velocity of the root body
   model.v[0].setZero();
@@ -1055,12 +1055,12 @@ void ForwardDynamicsPtr (
     model.v[i] = model.X_lambda[i].apply( model.v[lambda]) + model.v_J[i];
 
     /*
-       LOG << "X_J (" << i << "):" << std::endl << X_J << std::endl;
-       LOG << "v_J (" << i << "):" << std::endl << v_J << std::endl;
-       LOG << "v_lambda" << i << ":" << std::endl << model.v.at(lambda) << std::endl;
-       LOG << "X_base (" << i << "):" << std::endl << model.X_base[i] << std::endl;
-       LOG << "X_lambda (" << i << "):" << std::endl << model.X_lambda[i] << std::endl;
-       LOG << "SpatialVelocity (" << i << "): " << model.v[i] << std::endl;
+       RBDL_LOG << "X_J (" << i << "):" << std::endl << X_J << std::endl;
+       RBDL_LOG << "v_J (" << i << "):" << std::endl << v_J << std::endl;
+       RBDL_LOG << "v_lambda" << i << ":" << std::endl << model.v.at(lambda) << std::endl;
+       RBDL_LOG << "X_base (" << i << "):" << std::endl << model.X_base[i] << std::endl;
+       RBDL_LOG << "X_lambda (" << i << "):" << std::endl << model.X_lambda[i] << std::endl;
+       RBDL_LOG << "SpatialVelocity (" << i << "): " << model.v[i] << std::endl;
        */
     model.c[i] = model.c_J[i] + crossm(model.v[i],model.v_J[i]);
     model.I[i].setSpatialMatrix (model.IA[i]);
@@ -1068,7 +1068,7 @@ void ForwardDynamicsPtr (
     model.pA[i] = crossf(model.v[i],model.I[i] * model.v[i]);
 
     if (f_ext != NULL && (*f_ext)[i] != SpatialVector::Zero()) {
-      LOG << "External force (" << i << ") = " << model.X_base[i].toMatrixAdjoint()
+      RBDL_LOG << "External force (" << i << ") = " << model.X_base[i].toMatrixAdjoint()
           * (*f_ext)[i] << std::endl;
       model.pA[i] -= model.X_base[i].toMatrixAdjoint() * (*f_ext)[i];
     }
@@ -1076,7 +1076,7 @@ void ForwardDynamicsPtr (
 
   // ClearLogOutput();
 
-  LOG << "--- first loop ---" << std::endl;
+  RBDL_LOG << "--- first loop ---" << std::endl;
 
   for (i = model.mBodies.size() - 1; i > 0; i--) {
     unsigned int q_index = model.mJoints[i].q_index;
@@ -1087,7 +1087,7 @@ void ForwardDynamicsPtr (
       model.U[i] = model.IA[i] * model.S[i];
       model.d[i] = model.S[i].dot(model.U[i]);
       model.u[i] = Tau[q_index] - model.S[i].dot(model.pA[i]);
-      //      LOG << "u[" << i << "] = " << model.u[i] << std::endl;
+      //      RBDL_LOG << "u[" << i << "] = " << model.u[i] << std::endl;
 
       unsigned int lambda = model.lambda[i];
       if (lambda != 0) {
@@ -1105,7 +1105,7 @@ void ForwardDynamicsPtr (
         model.pA[lambda].noalias()
         += model.X_lambda[i].applyTranspose(pa);
 
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
             << model.pA[lambda].transpose() << std::endl;
       }
     } else if (model.mJoints[i].mDoFCount == 3
@@ -1117,7 +1117,7 @@ void ForwardDynamicsPtr (
       model.multdof3_u[i] = tau_temp
                             - model.multdof3_S[i].transpose() * model.pA[i];
 
-      // LOG << "multdof3_u[" << i << "] = "
+      // RBDL_LOG << "multdof3_u[" << i << "] = "
       //                      << model.multdof3_u[i].transpose() << std::endl;
       unsigned int lambda = model.lambda[i];
       if (lambda != 0) {
@@ -1140,7 +1140,7 @@ void ForwardDynamicsPtr (
         model.pA[lambda].noalias()
         += model.X_lambda[i].applyTranspose(pa);
 
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
             << model.pA[lambda].transpose()
             << std::endl;
       }
@@ -1167,7 +1167,7 @@ void ForwardDynamicsPtr (
 
       std::cout << "u: " << model.mCustomJoints[kI]->u << std::endl;
 
-      //      LOG << "multdof3_u[" << i << "] = "
+      //      RBDL_LOG << "multdof3_u[" << i << "] = "
       //      << model.multdof3_u[i].transpose() << std::endl;
       unsigned int lambda = model.lambda[i];
       if (lambda != 0) {
@@ -1186,7 +1186,7 @@ void ForwardDynamicsPtr (
                                       * model.X_lambda[i].toMatrix();
         model.pA[lambda].noalias() += model.X_lambda[i].applyTranspose(pa);
 
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
             << model.pA[lambda].transpose()
             << std::endl;
       }
@@ -1203,7 +1203,7 @@ void ForwardDynamicsPtr (
     SpatialTransform X_lambda = model.X_lambda[i];
 
     model.a[i] = X_lambda.apply(model.a[lambda]) + model.c[i];
-    LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
+    RBDL_LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
 
     if (model.mJoints[i].mDoFCount == 1
         && model.mJoints[i].mJointType != JointTypeCustom) {
@@ -1240,7 +1240,7 @@ void ForwardDynamicsPtr (
     }
   }
 
-  LOG << "QDDot = " << QDDot.transpose() << std::endl;
+  RBDL_LOG << "QDDot = " << QDDot.transpose() << std::endl;
 }
 
 
@@ -1290,12 +1290,12 @@ RBDL_DLLAPI bool InverseKinematicsPtr (
       CalcPointJacobian (model, Qres, body_id[k], body_point[k], G, false);
       Vector3d point_base =
         CalcBodyToBaseCoordinates (model, Qres, body_id[k], body_point[k], false);
-      LOG << "current_pos = " << point_base.transpose() << std::endl;
+      RBDL_LOG << "current_pos = " << point_base.transpose() << std::endl;
 
       for (unsigned int i = 0; i < 3; i++) {
         for (unsigned int j = 0; j < model.qdot_size; j++) {
           unsigned int row = k * 3 + i;
-          LOG << "i = " << i << " j = " << j << " k = " << k << " row = "
+          RBDL_LOG << "i = " << i << " j = " << j << " k = " << k << " row = "
               << row << " col = " << j << std::endl;
           J(row, j) = G (i,j);
         }
@@ -1304,12 +1304,12 @@ RBDL_DLLAPI bool InverseKinematicsPtr (
       }
     }
 
-    LOG << "J = " << J << std::endl;
-    LOG << "e = " << e.transpose() << std::endl;
+    RBDL_LOG << "J = " << J << std::endl;
+    RBDL_LOG << "e = " << e.transpose() << std::endl;
 
     // abort if we are getting "close"
     if (e.norm() < step_tol) {
-      LOG << "Reached target close enough after " << ik_iter << " steps" << std::endl;
+      RBDL_LOG << "Reached target close enough after " << ik_iter << " steps" << std::endl;
       return true;
     }
 
@@ -1322,17 +1322,17 @@ RBDL_DLLAPI bool InverseKinematicsPtr (
     bool solve_successful = LinSolveGaussElimPivot (JJTe_lambda2_I, e, z);
     assert (solve_successful);
 
-    LOG << "z = " << z << std::endl;
+    RBDL_LOG << "z = " << z << std::endl;
 
     VectorNd delta_theta = J.transpose() * z;
-    LOG << "change = " << delta_theta << std::endl;
+    RBDL_LOG << "change = " << delta_theta << std::endl;
 
     Qres = Qres + delta_theta;
-    LOG << "Qres = " << Qres.transpose() << std::endl;
+    RBDL_LOG << "Qres = " << Qres.transpose() << std::endl;
 
     if (delta_theta.norm() < step_tol) {
 
-      LOG << "reached convergence after " << ik_iter << " steps" << std::endl;
+      RBDL_LOG << "reached convergence after " << ik_iter << " steps" << std::endl;
       return true;
     }
 
@@ -1351,7 +1351,7 @@ RBDL_DLLAPI bool InverseKinematicsPtr (
       test_1[i] = 0.;
     }
 
-    LOG << "test_res = " << test_res.transpose() << std::endl;
+    RBDL_LOG << "test_res = " << test_res.transpose() << std::endl;
   }
 
   return false;
@@ -1470,13 +1470,13 @@ RBDL_DLLAPI bool InverseKinematicsCSPtr (
       }
     }
 
-    LOG << "J = " << CS.J << std::endl;
-    LOG << "e = " << CS.e.transpose() << std::endl;
+    RBDL_LOG << "J = " << CS.J << std::endl;
+    RBDL_LOG << "e = " << CS.e.transpose() << std::endl;
     CS.error_norm = CS.e.norm();
 
     // abort if we are getting "close"
     if (CS.error_norm < CS.step_tol) {
-      LOG << "Reached target close enough after " << CS.num_steps << " steps" <<
+      RBDL_LOG << "Reached target close enough after " << CS.num_steps << " steps" <<
           std::endl;
       return true;
     }
@@ -1493,7 +1493,7 @@ RBDL_DLLAPI bool InverseKinematicsCSPtr (
     //
     //     VectorNd delta_theta = CS.J.transpose() * JJT_Ek_wnI.colPivHouseholderQr().solve (CS.e);
     //
-    //     LOG << "change = " << delta_theta << std::endl;
+    //     RBDL_LOG << "change = " << delta_theta << std::endl;
 
 
     // "joint space" from puppeteer
@@ -1520,7 +1520,7 @@ RBDL_DLLAPI bool InverseKinematicsCSPtr (
     Qres = Qres + delta_theta;
 
     if (delta_theta.norm() < CS.step_tol) {
-      LOG << "reached convergence after " << CS.num_steps << " steps" << std::endl;
+      RBDL_LOG << "reached convergence after " << CS.num_steps << " steps" << std::endl;
       return true;
     }
   }
@@ -1542,7 +1542,7 @@ RBDL_DLLAPI void ForwardDynamicsConstraintsDirectPtr (
   std::vector<Math::SpatialVector> *f_ext
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   using namespace RigidBodyDynamics::Math;
 
@@ -1651,7 +1651,7 @@ RBDL_DLLAPI void CalcCenterOfMass (
 
   mass = Itot.m;
   com = Itot.h / mass;
-  LOG << "mass = " << mass << " com = " << com.transpose() << " htot = " <<
+  RBDL_LOG << "mass = " << mass << " com = " << com.transpose() << " htot = " <<
       htot.transpose() << std::endl;
 
   if (com_velocity) {

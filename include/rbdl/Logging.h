@@ -20,10 +20,10 @@ class LoggingGuard;
  * \warning Logging has a huge impact on performance.
  */
 #ifndef RBDL_ENABLE_LOGGING
-#define LOG if (false) LogOutput 
+#define RBDL_LOG if (false) LogOutput 
 #define SUPPRESS_LOGGING ;
 #else
-#define LOG LogOutput
+#define RBDL_LOG LogOutput
 #define SUPPRESS_LOGGING LoggingGuard _nolog
 #endif
 

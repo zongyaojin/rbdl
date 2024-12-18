@@ -47,11 +47,11 @@ TEST_CASE_METHOD(DynamicsFixture,
 
   unsigned int i;
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a[i] << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a[i] << endl;
   }
 
   CHECK (-4.905 == QDDot[0]);
@@ -77,11 +77,11 @@ TEST_CASE_METHOD(DynamicsFixture,
 
   unsigned int i;
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a[i] << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a[i] << endl;
   }
 
   CHECK (-2.3544 == QDDot[0]);
@@ -111,11 +111,11 @@ TEST_CASE_METHOD(DynamicsFixture,
 
   unsigned int i;
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a[i] << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a[i] << endl;
   }
 
   //  cout << LogOutput.str() << endl;
@@ -153,11 +153,11 @@ TEST_CASE_METHOD(DynamicsFixture,
 
   unsigned int i;
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a[i] << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a[i] << endl;
   }
 
   // cout << LogOutput.str() << endl;
@@ -191,11 +191,11 @@ TEST_CASE_METHOD(DynamicsFixture,
 
   unsigned int i;
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a[i] << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a[i] << endl;
   }
 
   // cout << LogOutput.str() << endl;
@@ -243,11 +243,11 @@ TEST_CASE_METHOD(DynamicsFixture,
 
   unsigned int i;
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a[i] << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a[i] << endl;
   }
 
   // cout << LogOutput.str() << endl;
@@ -532,7 +532,7 @@ TEST_CASE (__FILE__"_TestForwardDynamicsTwoLegModelLagrangian", "") {
                             joint_rot_z, foot_left_body);
   foot_left_id = temp_id;
 
-  LOG << "--- model created (" << model->dof_count << " DOF) ---" << endl;
+  RBDL_LOG << "--- model created (" << model->dof_count << " DOF) ---" << endl;
   
   // contact data
   CS_right.AddContactConstraint(foot_right_id, Vector3d (0., 0., 0.),

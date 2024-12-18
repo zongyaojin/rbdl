@@ -70,7 +70,7 @@ TEST_CASE_METHOD(ModelVelocitiesFixture,
               AllCloseVector(point_velocity, TEST_PREC, TEST_PREC)
   );
 
-  LOG << "Point velocity = " << point_velocity << endl;
+  RBDL_LOG << "Point velocity = " << point_velocity << endl;
   //	cout << LogOutput.str() << endl;
 }
 

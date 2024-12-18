@@ -680,8 +680,8 @@ void SolveConstrainedSystemDirect (
   b.block(0, 0, c.rows(), 1) = c;
   b.block(c.rows(), 0, gamma.rows(), 1) = gamma;
 
-  LOG << "A = " << std::endl << A << std::endl;
-  LOG << "b = " << std::endl << b << std::endl;
+  RBDL_LOG << "A = " << std::endl << A << std::endl;
+  RBDL_LOG << "b = " << std::endl << b << std::endl;
 
 #ifdef RBDL_USE_CASADI_MATH
   auto linsol = casadi::Linsol("linear_solver", "symbolicqr", A.sparsity());
@@ -698,13 +698,13 @@ void SolveConstrainedSystemDirect (
     x = A.householderQr().solve(b);
     break;
   default:
-    LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
+    RBDL_LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
     assert (0);
     break;
   }
 #endif
 
-  LOG << "x = " << std::endl << x << std::endl;
+  RBDL_LOG << "x = " << std::endl << x << std::endl;
 }
 
 //==============================================================================
@@ -783,7 +783,7 @@ void SolveConstrainedSystemNullSpace (
     qddot_y = (G * Y).householderQr().solve (gamma);
     break;
   default:
-    LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
+    RBDL_LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
     assert (0);
     break;
   }
@@ -814,7 +814,7 @@ void SolveConstrainedSystemNullSpace (
     lambda = (G * Y).householderQr().solve (Y.transpose() * (H * qddot - c));
     break;
   default:
-    LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
+    RBDL_LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
     assert (0);
     break;
   }
@@ -1104,7 +1104,7 @@ void ForwardDynamicsConstraintsDirect (
   std::vector<Math::SpatialVector> *f_ext
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   CalcConstrainedSystemVariables (model, Q, QDot, Tau, CS, update_kinematics, 
                                   f_ext);
@@ -1158,7 +1158,7 @@ void ForwardDynamicsConstraintsNullSpace (
 )
 {
 
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   CalcConstrainedSystemVariables (model, Q, QDot, Tau, CS, update_kinematics, 
                                   f_ext);
@@ -1280,7 +1280,7 @@ void ForwardDynamicsApplyConstraintForces (
   VectorNd &QDDot
 )
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
   assert (QDDot.size() == model.dof_count);
 
   unsigned int i = 0;
@@ -1294,7 +1294,7 @@ void ForwardDynamicsApplyConstraintForces (
 #else
     if (CS.f_ext_constraints[i] != SpatialVector::Zero()) {
 #endif
-      LOG << "External force (" << i << ") = "
+      RBDL_LOG << "External force (" << i << ") = "
           << model.X_base[i].toMatrixAdjoint() * CS.f_ext_constraints[i]
           << std::endl;
       model.pA[i] -= model.X_base[i].toMatrixAdjoint()*CS.f_ext_constraints[i];
@@ -1303,7 +1303,7 @@ void ForwardDynamicsApplyConstraintForces (
 
   // ClearLogOutput();
 
-  LOG << "--- first loop ---" << std::endl;
+  RBDL_LOG << "--- first loop ---" << std::endl;
 
   for (i = model.mBodies.size() - 1; i > 0; i--) {
     unsigned int q_index = model.mJoints[i].q_index;
@@ -1334,7 +1334,7 @@ void ForwardDynamicsApplyConstraintForces (
         model.pA[lambda].noalias() += model.X_lambda[i].applyTranspose(pa);
 #endif
 
-        LOG << "pA[" << lambda << "] = " << model.pA[lambda].transpose()
+        RBDL_LOG << "pA[" << lambda << "] = " << model.pA[lambda].transpose()
             << std::endl;
       }
     } else if (model.mJoints[i].mDoFCount == 1
@@ -1357,7 +1357,7 @@ void ForwardDynamicsApplyConstraintForces (
         model.pA[lambda].noalias() += model.X_lambda[i].applyTranspose(pa);
 #endif
 
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
             << model.pA[lambda].transpose() << std::endl;
       }
     } else if(model.mJoints[i].mJointType == JointTypeCustom) {
@@ -1398,7 +1398,7 @@ void ForwardDynamicsApplyConstraintForces (
         model.pA[lambda].noalias() += model.X_lambda[i].applyTranspose(pa);
 #endif
 
-        LOG << "pA[" << lambda << "] = " << model.pA[lambda].transpose()
+        RBDL_LOG << "pA[" << lambda << "] = " << model.pA[lambda].transpose()
             << std::endl;
       }
     }
@@ -1415,7 +1415,7 @@ void ForwardDynamicsApplyConstraintForces (
     SpatialTransform X_lambda = model.X_lambda[i];
 
     model.a[i] = X_lambda.apply(model.a[lambda]) + model.c[i];
-    LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
+    RBDL_LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
 
     if (model.mJoints[i].mDoFCount == 3
         && model.mJoints[i].mJointType != JointTypeCustom) {
@@ -1450,7 +1450,7 @@ void ForwardDynamicsApplyConstraintForces (
     }
   }
 
-  LOG << "QDDot = " << QDDot.transpose() << std::endl;
+  RBDL_LOG << "QDDot = " << QDDot.transpose() << std::endl;
 }
 
 //==============================================================================
@@ -1470,7 +1470,7 @@ void ForwardDynamicsAccelerationDeltas (
   const std::vector<SpatialVector> &f_t
 )
 {
-  LOG << "-------- " << __func__ << " ------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " ------" << std::endl;
 
   assert (CS.d_pA.size() == model.mBodies.size());
   assert (CS.d_a.size() == model.mBodies.size());
@@ -1535,14 +1535,14 @@ void ForwardDynamicsAccelerationDeltas (
   }
 
   for (unsigned int i = 0; i < f_t.size(); i++) {
-    LOG << "f_t[" << i << "] = " << f_t[i].transpose() << std::endl;
+    RBDL_LOG << "f_t[" << i << "] = " << f_t[i].transpose() << std::endl;
   }
 
   for (unsigned int i = 0; i < model.mBodies.size(); i++) {
-    LOG << "i = " << i << ": d_pA[i] " << CS.d_pA[i].transpose() << std::endl;
+    RBDL_LOG << "i = " << i << ": d_pA[i] " << CS.d_pA[i].transpose() << std::endl;
   }
   for (unsigned int i = 0; i < model.mBodies.size(); i++) {
-    LOG << "i = " << i << ": d_u[i] = " << CS.d_u[i] << std::endl;
+    RBDL_LOG << "i = " << i << ": d_u[i] = " << CS.d_u[i] << std::endl;
   }
 
   QDDot_t[0] = 0.;
@@ -1586,8 +1586,8 @@ void ForwardDynamicsAccelerationDeltas (
       CS.d_a[i] = Xa + model.mCustomJoints[kI]->S * qdd_temp;
     }
 
-    LOG << "QDDot_t[" << i - 1 << "] = " << QDDot_t[i - 1] << std::endl;
-    LOG << "d_a[i] = " << CS.d_a[i].transpose() << std::endl;
+    RBDL_LOG << "QDDot_t[" << i - 1 << "] = " << QDDot_t[i - 1] << std::endl;
+    RBDL_LOG << "d_a[i] = " << CS.d_a[i].transpose() << std::endl;
   }
 }
 
@@ -1609,7 +1609,7 @@ void ForwardDynamicsContactsKokkevis (
   VectorNd &QDDot
 )
 {
-  LOG << "-------- " << __func__ << " ------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " ------" << std::endl;
 
   assert (CS.f_ext_constraints.size() == model.mBodies.size());
   assert (CS.QDDot_0.size() == model.dof_count);
@@ -1640,7 +1640,7 @@ void ForwardDynamicsContactsKokkevis (
     ForwardDynamics(model, Q, QDot, Tau, CS.QDDot_0);
   }
 
-  LOG << "=== Initial Loop Start ===" << std::endl;
+  RBDL_LOG << "=== Initial Loop Start ===" << std::endl;
   // we have to compute the standard accelerations first as we use them to
   // compute the effects of each test force
   unsigned int bi = 0;
@@ -1650,13 +1650,13 @@ void ForwardDynamicsContactsKokkevis (
       UpdateKinematicsCustom(model, NULL, NULL, &CS.QDDot_0);
     }
     {
-      LOG << "body_id = "
+      RBDL_LOG << "body_id = "
           << CS.contactConstraints[bi]->getBodyIds()[0]
           << std::endl;
-      LOG << "point = "
+      RBDL_LOG << "point = "
           << CS.contactConstraints[bi]->getBodyFrames()[0].r
           << std::endl;
-      LOG << "QDDot_0 = " << CS.QDDot_0.transpose() << std::endl;
+      RBDL_LOG << "QDDot_0 = " << CS.QDDot_0.transpose() << std::endl;
     }
     {
       SUPPRESS_LOGGING;
@@ -1674,7 +1674,7 @@ void ForwardDynamicsContactsKokkevis (
 
   for (bi = 0; bi < CS.contactConstraints.size(); bi++) {
 
-    LOG << "=== Testforce Loop Start ===" << std::endl;
+    RBDL_LOG << "=== Testforce Loop Start ===" << std::endl;
 
     ci = CS.contactConstraints[bi]->getConstraintIndex();
 
@@ -1682,7 +1682,7 @@ void ForwardDynamicsContactsKokkevis (
                                        CS.contactConstraints[bi]->getBodyIds()[0]);
 
     // assemble the test force
-    LOG << "point_global = " << point_global.transpose() << std::endl;
+    RBDL_LOG << "point_global = " << point_global.transpose() << std::endl;
 
     CS.contactConstraints[bi]->calcPointForceJacobian(
       model,Q,CS.cache,CS.f_t,false);
@@ -1692,16 +1692,16 @@ void ForwardDynamicsContactsKokkevis (
 
       CS.f_ext_constraints[movable_body_id] = CS.f_t[ci+j];
 
-      LOG << "f_t[" << movable_body_id << "] = " << CS.f_t[ci+j].transpose()
+      RBDL_LOG << "f_t[" << movable_body_id << "] = " << CS.f_t[ci+j].transpose()
           << std::endl;
       {
         ForwardDynamicsAccelerationDeltas(model, CS, CS.QDDot_t
                                           , movable_body_id, CS.f_ext_constraints);
 
-        LOG << "QDDot_0 = " << CS.QDDot_0.transpose() << std::endl;
-        LOG << "QDDot_t = " << (CS.QDDot_t + CS.QDDot_0).transpose()
+        RBDL_LOG << "QDDot_0 = " << CS.QDDot_0.transpose() << std::endl;
+        RBDL_LOG << "QDDot_t = " << (CS.QDDot_t + CS.QDDot_0).transpose()
             << std::endl;
-        LOG << "QDDot_t - QDDot_0 = " << (CS.QDDot_t).transpose() << std::endl;
+        RBDL_LOG << "QDDot_t - QDDot_0 = " << (CS.QDDot_t).transpose() << std::endl;
       }
 
       CS.f_ext_constraints[movable_body_id].setZero();
@@ -1723,9 +1723,9 @@ void ForwardDynamicsContactsKokkevis (
             model,Q,QDot,CS.QDDot_t,point_accel_t,false);
         }
 
-        LOG << "point_accel_0  = " << CS.point_accel_0[ci+j].transpose()
+        RBDL_LOG << "point_accel_0  = " << CS.point_accel_0[ci+j].transpose()
             << std::endl;
-        LOG << "point_accel_t = " << point_accel_t.transpose() << std::endl;
+        RBDL_LOG << "point_accel_t = " << point_accel_t.transpose() << std::endl;
         for(unsigned int k=0;
             k < CS.contactConstraints[dj]
             ->getConstraintNormalVectors().size(); ++k) {
@@ -1741,8 +1741,8 @@ void ForwardDynamicsContactsKokkevis (
 
 
 
-  LOG << "K = " << std::endl << CS.K << std::endl;
-  LOG << "a = " << std::endl << CS.a << std::endl;
+  RBDL_LOG << "K = " << std::endl << CS.K << std::endl;
+  RBDL_LOG << "a = " << std::endl << CS.a << std::endl;
 
 #ifdef RBDL_USE_CASADI_MATH
     auto linsol = casadi::Linsol("linear_solver", "symbolicqr", CS.K.sparsity());
@@ -1759,13 +1759,13 @@ void ForwardDynamicsContactsKokkevis (
     CS.force = CS.K.householderQr().solve(CS.a);
     break;
   default:
-    LOG << "Error: Invalid linear solver: " << CS.linear_solver << std::endl;
+    RBDL_LOG << "Error: Invalid linear solver: " << CS.linear_solver << std::endl;
     assert (0);
     break;
   }
 #endif
 
-  LOG << "f = " << CS.force.transpose() << std::endl;
+  RBDL_LOG << "f = " << CS.force.transpose() << std::endl;
 
 
   for(bi=0; bi<CS.contactConstraints.size(); ++bi) {
@@ -1782,7 +1782,7 @@ void ForwardDynamicsContactsKokkevis (
     for(unsigned int k=0;
         k<CS.contactConstraints[bi]->getConstraintSize(); ++k) {
       CS.f_ext_constraints[movable_body_id] -= CS.f_t[ci+k] * CS.force[ci+k];
-      LOG << "f_ext[" << movable_body_id << "] = "
+      RBDL_LOG << "f_ext[" << movable_body_id << "] = "
           << CS.f_ext_constraints[movable_body_id].transpose() << std::endl;
     }
 
@@ -1795,7 +1795,7 @@ void ForwardDynamicsContactsKokkevis (
     ForwardDynamicsApplyConstraintForces (model, Tau, CS, QDDot);
   }
 
-  LOG << "QDDot after applying f_ext: " << QDDot.transpose() << std::endl;
+  RBDL_LOG << "QDDot after applying f_ext: " << QDDot.transpose() << std::endl;
 }
 
 
@@ -1811,7 +1811,7 @@ bool isConstrainedSystemFullyActuated(
   std::vector<Math::SpatialVector> *f_ext)
 {
 
-  LOG << "-------- " << __func__ << " ------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " ------" << std::endl;
 
 
   assert (CS.S.cols()    == QDot.rows());
@@ -1855,7 +1855,7 @@ void InverseDynamicsConstraints(
   std::vector<Math::SpatialVector> *f_ext)
 {
 
-  LOG << "-------- " << __func__ << " ------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " ------" << std::endl;
 
   assert (QDot.size()         == QDDotDesired.size());
   assert (QDDotDesired.size() == QDot.size());
@@ -1942,7 +1942,7 @@ void InverseDynamicsConstraintsRelaxed(
   bool update_kinematics,
   std::vector<Math::SpatialVector> *f_ext)
 {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   //Check that the input vectors and matricies are sized appropriately
   assert(Q.size()               == model.q_size);

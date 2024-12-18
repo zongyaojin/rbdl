@@ -27,7 +27,7 @@ TEST_CASE_METHOD(FixedBase3DoF,
   CHECK_THAT (Vector3d(0., 1., 0.),
               AllCloseVector(point_acceleration, TEST_PREC, TEST_PREC)
   );
-  // LOG << "Point accel = " << point_acceleration << endl;
+  // RBDL_LOG << "Point accel = " << point_acceleration << endl;
 }
 
 TEST_CASE_METHOD(FixedBase3DoF,
@@ -45,7 +45,7 @@ TEST_CASE_METHOD(FixedBase3DoF,
   CHECK_THAT (Vector3d(-1., 0., 0.),
               AllCloseVector(point_acceleration, TEST_PREC, TEST_PREC)
   );
-  // LOG << "Point accel = " << point_acceleration << endl;
+  // RBDL_LOG << "Point accel = " << point_acceleration << endl;
 }
 
 TEST_CASE_METHOD(FixedBase3DoF,

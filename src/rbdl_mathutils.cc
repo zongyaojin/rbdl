@@ -58,7 +58,7 @@ RBDL_DLLAPI bool LinSolveGaussElimPivot (MatrixNd A, VectorNd b, VectorNd &x) {
     pi = j;
     Scalar pv = fabs (A(j,pivot[j]));
 
-    // LOG << "j = " << j << " pv = " << pv << std::endl;
+    // RBDL_LOG << "j = " << j << " pv = " << pv << std::endl;
     // find the pivot
     for (k = j; k < n; k++) {
       Scalar pt = fabs (A(j,pivot[k]));
@@ -68,8 +68,8 @@ RBDL_DLLAPI bool LinSolveGaussElimPivot (MatrixNd A, VectorNd b, VectorNd &x) {
         unsigned int p_swap = pivot[j];
         pivot[j] = pivot[pi];
         pivot[pi] = p_swap;
-        //	LOG << "swap " << j << " with " << pi << std::endl;
-        //	LOG << "j = " << j << " pv = " << pv << std::endl;
+        //	RBDL_LOG << "swap " << j << " with " << pi << std::endl;
+        //	RBDL_LOG << "j = " << j << " pv = " << pv << std::endl;
       }
     }
 
@@ -110,10 +110,10 @@ RBDL_DLLAPI bool LinSolveGaussElimPivot (MatrixNd A, VectorNd b, VectorNd &x) {
   }
 
   /*
-     LOG << "A = " << std::endl << A << std::endl;
-     LOG << "b = " << b << std::endl;
-     LOG << "x = " << x << std::endl;
-     LOG << "pivot = " << pivot[0] << " " << pivot[1] << " " << pivot[2] << std::endl;
+     RBDL_LOG << "A = " << std::endl << A << std::endl;
+     RBDL_LOG << "b = " << b << std::endl;
+     RBDL_LOG << "x = " << x << std::endl;
+     RBDL_LOG << "pivot = " << pivot[0] << " " << pivot[1] << " " << pivot[2] << std::endl;
      std::cout << LogOutput.str() << std::endl;
      */
 
