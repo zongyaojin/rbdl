@@ -27,7 +27,7 @@ RBDL_DLLAPI void UpdateKinematics(
     const VectorNd &Q,
     const VectorNd &QDot,
     const VectorNd &QDDot) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   unsigned int i;
 
@@ -71,7 +71,7 @@ RBDL_DLLAPI void UpdateKinematics(
   }
 
   for (i = 1; i < model.mBodies.size(); i++) {
-    LOG << "a[" << i << "] = " << model.a[i].transpose() << std::endl;
+    RBDL_LOG << "a[" << i << "] = " << model.a[i].transpose() << std::endl;
   }
 }
 
@@ -80,7 +80,7 @@ RBDL_DLLAPI void UpdateKinematicsCustom(
     const VectorNd *Q,
     const VectorNd *QDot,
     const VectorNd *QDDot) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   unsigned int i;
 
@@ -113,7 +113,7 @@ RBDL_DLLAPI void UpdateKinematicsCustom(
         model.v[i] = model.v_J[i];
         model.c[i] = model.c_J[i] + crossm(model.v[i],model.v_J[i]);
       }
-      // LOG << "v[" << i << "] = " << model.v[i].transpose() << std::endl;
+      // RBDL_LOG << "v[" << i << "] = " << model.v[i].transpose() << std::endl;
     }
   }
 
@@ -248,7 +248,7 @@ RBDL_DLLAPI void CalcPointJacobian (
     const Vector3d &point_position,
     MatrixNd &G,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   // update the Kinematics if necessary
   if (update_kinematics) {
@@ -312,7 +312,7 @@ RBDL_DLLAPI void CalcPointJacobian6D (
     const Vector3d &point_position,
     MatrixNd &G,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   // update the Kinematics if necessary
   if (update_kinematics) {
@@ -373,7 +373,7 @@ RBDL_DLLAPI void CalcBodySpatialJacobian (
     unsigned int body_id,
     MatrixNd &G,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   // update the Kinematics if necessary
   if (update_kinematics) {
@@ -438,7 +438,7 @@ RBDL_DLLAPI Vector3d CalcPointVelocity (
     unsigned int body_id,
     const Vector3d &point_position,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
   assert (model.IsBodyId(body_id) || body_id == 0);
   assert (model.q_size == Q.size());
   assert (model.qdot_size == QDot.size());
@@ -482,7 +482,7 @@ RBDL_DLLAPI Math::SpatialVector CalcPointVelocity6D(
     unsigned int body_id,
     const Math::Vector3d &point_position,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
   assert (model.IsBodyId(body_id) || body_id == 0);
   assert (model.q_size == Q.size());
   assert (model.qdot_size == QDot.size());
@@ -520,7 +520,7 @@ RBDL_DLLAPI Vector3d CalcPointAcceleration (
     unsigned int body_id,
     const Vector3d &point_position,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   // Reset the velocity of the root body
   model.v[0].setZero();
@@ -529,7 +529,7 @@ RBDL_DLLAPI Vector3d CalcPointAcceleration (
   if (update_kinematics)
     UpdateKinematics (model, Q, QDot, QDDot);
 
-  LOG << std::endl;
+  RBDL_LOG << std::endl;
 
   unsigned int reference_body_id = body_id;
   Vector3d reference_point = point_position;
@@ -567,7 +567,7 @@ RBDL_DLLAPI SpatialVector CalcPointAcceleration6D(
     unsigned int body_id,
     const Vector3d &point_position,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   // Reset the velocity of the root body
   model.v[0].setZero();
@@ -576,7 +576,7 @@ RBDL_DLLAPI SpatialVector CalcPointAcceleration6D(
   if (update_kinematics)
     UpdateKinematics (model, Q, QDot, QDDot);
 
-  LOG << std::endl;
+  RBDL_LOG << std::endl;
 
   unsigned int reference_body_id = body_id;
   Vector3d reference_point = point_position;
@@ -629,12 +629,12 @@ RBDL_DLLAPI bool InverseKinematics (
       CalcPointJacobian (model, Qres, body_id[k], body_point[k], G, false);
       Vector3d point_base = 
         CalcBodyToBaseCoordinates (model, Qres, body_id[k], body_point[k], false);
-      LOG << "current_pos = " << point_base.transpose() << std::endl;
+      RBDL_LOG << "current_pos = " << point_base.transpose() << std::endl;
 
       for (unsigned int i = 0; i < 3; i++) {
         for (unsigned int j = 0; j < model.qdot_size; j++) {
           unsigned int row = k * 3 + i;
-          LOG << "i = " << i << " j = " << j << " k = " << k << " row = " 
+          RBDL_LOG << "i = " << i << " j = " << j << " k = " << k << " row = " 
             << row << " col = " << j << std::endl;
           J(row, j) = G (i,j);
         }
@@ -643,12 +643,12 @@ RBDL_DLLAPI bool InverseKinematics (
       }
     }
 
-    LOG << "J = " << J << std::endl;
-    LOG << "e = " << e.transpose() << std::endl;
+    RBDL_LOG << "J = " << J << std::endl;
+    RBDL_LOG << "e = " << e.transpose() << std::endl;
 
     // abort if we are getting "close"
     if (e.norm() < step_tol) {
-      LOG << "Reached target close enough after " << ik_iter << " steps" << std::endl;
+      RBDL_LOG << "Reached target close enough after " << ik_iter << " steps" << std::endl;
       return true;
     }
 
@@ -661,16 +661,16 @@ RBDL_DLLAPI bool InverseKinematics (
     bool solve_successful = LinSolveGaussElimPivot (JJTe_lambda2_I, e, z);
     assert (solve_successful);
 
-    LOG << "z = " << z << std::endl;
+    RBDL_LOG << "z = " << z << std::endl;
 
     VectorNd delta_theta = J.transpose() * z;
-    LOG << "change = " << delta_theta << std::endl;
+    RBDL_LOG << "change = " << delta_theta << std::endl;
 
     Qres = Qres + delta_theta;
-    LOG << "Qres = " << Qres.transpose() << std::endl;
+    RBDL_LOG << "Qres = " << Qres.transpose() << std::endl;
 
     if (delta_theta.norm() < step_tol) {
-      LOG << "reached convergence after " << ik_iter << " steps" << std::endl;
+      RBDL_LOG << "reached convergence after " << ik_iter << " steps" << std::endl;
       return true;
     }
 
@@ -689,7 +689,7 @@ RBDL_DLLAPI bool InverseKinematics (
       test_1[i] = 0.;
     }
 
-    LOG << "test_res = " << test_res.transpose() << std::endl;
+    RBDL_LOG << "test_res = " << test_res.transpose() << std::endl;
   }
 
   return false;
@@ -942,13 +942,13 @@ bool InverseKinematics (
       }
     }
 
-    LOG << "J = " << CS.J << std::endl;
-    LOG << "e = " << CS.e.transpose() << std::endl;
+    RBDL_LOG << "J = " << CS.J << std::endl;
+    RBDL_LOG << "e = " << CS.e.transpose() << std::endl;
     CS.error_norm = CS.e.norm();
 
     // abort if we are getting "close"
     if (CS.error_norm < CS.step_tol) {
-      LOG << "Reached target close enough after " << CS.num_steps << " steps" << std::endl;
+      RBDL_LOG << "Reached target close enough after " << CS.num_steps << " steps" << std::endl;
       return true;
     }
 
@@ -964,7 +964,7 @@ bool InverseKinematics (
     // 
     //     VectorNd delta_theta = CS.J.transpose() * JJT_Ek_wnI.colPivHouseholderQr().solve (CS.e);
     // 
-    //     LOG << "change = " << delta_theta << std::endl;
+    //     RBDL_LOG << "change = " << delta_theta << std::endl;
 
 
     // "joint space" from puppeteer
@@ -991,7 +991,7 @@ bool InverseKinematics (
     Qres = Qres + delta_theta;
     CS.delta_q_norm = delta_theta.norm();
     if (CS.delta_q_norm < CS.step_tol) {
-      LOG << "reached convergence after " << CS.num_steps << " steps" << std::endl;
+      RBDL_LOG << "reached convergence after " << CS.num_steps << " steps" << std::endl;
       return true;
     }
   }

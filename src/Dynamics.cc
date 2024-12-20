@@ -30,7 +30,7 @@ RBDL_DLLAPI void InverseDynamics (
     const VectorNd &QDDot,
     VectorNd &Tau,
     std::vector<SpatialVector> *f_ext) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   // Reset the velocity of the root body
   model.v[0].setZero();
@@ -110,7 +110,7 @@ RBDL_DLLAPI void NonlinearEffects (
     const VectorNd &QDot,
     VectorNd &Tau,
     std::vector<Math::SpatialVector> *f_ext) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   SpatialVector spatial_gravity (0., 0., 0., -model.gravity[0], -model.gravity[1], -model.gravity[2]);
 
@@ -174,7 +174,7 @@ RBDL_DLLAPI void CompositeRigidBodyAlgorithm (
     const VectorNd &Q,
     MatrixNd &H,
     bool update_kinematics) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   assert (H.rows() == model.dof_count && H.cols() == model.dof_count);
 
@@ -213,9 +213,9 @@ RBDL_DLLAPI void CompositeRigidBodyAlgorithm (
           } else if (model.mJoints[j].mDoFCount == 3) {
             Vector3d H_temp2 = 
               (F.transpose() * model.multdof3_S[j]).transpose();
-            LOG << F.transpose() << std::endl 
+            RBDL_LOG << F.transpose() << std::endl 
               << model.multdof3_S[j] << std::endl;
-            LOG << H_temp2.transpose() << std::endl;
+            RBDL_LOG << H_temp2.transpose() << std::endl;
 
             H.block<1,3>(dof_index_i,dof_index_j) = H_temp2.transpose();
             H.block<3,1>(dof_index_j,dof_index_i) = H_temp2;
@@ -226,11 +226,11 @@ RBDL_DLLAPI void CompositeRigidBodyAlgorithm (
           VectorNd H_temp2    =
             (F.transpose() * model.mCustomJoints[k]->S).transpose();
 
-          LOG << F.transpose()
+          RBDL_LOG << F.transpose()
             << std::endl
             << model.mCustomJoints[j]->S << std::endl;
 
-          LOG << H_temp2.transpose() << std::endl;
+          RBDL_LOG << H_temp2.transpose() << std::endl;
 
           H.block(dof_index_i,dof_index_j,1,dof) = H_temp2.transpose();
           H.block(dof_index_j,dof_index_i,dof,1) = H_temp2;
@@ -324,16 +324,16 @@ RBDL_DLLAPI void ForwardDynamics (
     const VectorNd &Tau,
     VectorNd &QDDot,
     std::vector<SpatialVector> *f_ext) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   SpatialVector spatial_gravity (0., 0., 0., model.gravity[0], model.gravity[1], model.gravity[2]);
 
   unsigned int i = 0;
 
-  LOG << "Q          = " << Q.transpose() << std::endl;
-  LOG << "QDot       = " << QDot.transpose() << std::endl;
-  LOG << "Tau        = " << Tau.transpose() << std::endl;
-  LOG << "---" << std::endl;
+  RBDL_LOG << "Q          = " << Q.transpose() << std::endl;
+  RBDL_LOG << "QDot       = " << QDot.transpose() << std::endl;
+  RBDL_LOG << "Tau        = " << Tau.transpose() << std::endl;
+  RBDL_LOG << "---" << std::endl;
 
   // Reset the velocity of the root body
   model.v[0].setZero();
@@ -351,12 +351,12 @@ RBDL_DLLAPI void ForwardDynamics (
     model.v[i] = model.X_lambda[i].apply( model.v[lambda]) + model.v_J[i];
 
     /*
-       LOG << "X_J (" << i << "):" << std::endl << X_J << std::endl;
-       LOG << "v_J (" << i << "):" << std::endl << v_J << std::endl;
-       LOG << "v_lambda" << i << ":" << std::endl << model.v.at(lambda) << std::endl;
-       LOG << "X_base (" << i << "):" << std::endl << model.X_base[i] << std::endl;
-       LOG << "X_lambda (" << i << "):" << std::endl << model.X_lambda[i] << std::endl;
-       LOG << "SpatialVelocity (" << i << "): " << model.v[i] << std::endl;
+       RBDL_LOG << "X_J (" << i << "):" << std::endl << X_J << std::endl;
+       RBDL_LOG << "v_J (" << i << "):" << std::endl << v_J << std::endl;
+       RBDL_LOG << "v_lambda" << i << ":" << std::endl << model.v.at(lambda) << std::endl;
+       RBDL_LOG << "X_base (" << i << "):" << std::endl << model.X_base[i] << std::endl;
+       RBDL_LOG << "X_lambda (" << i << "):" << std::endl << model.X_lambda[i] << std::endl;
+       RBDL_LOG << "SpatialVelocity (" << i << "): " << model.v[i] << std::endl;
        */
     model.c[i] = model.c_J[i] + crossm(model.v[i],model.v_J[i]);
     model.I[i].setSpatialMatrix (model.IA[i]);
@@ -368,14 +368,14 @@ RBDL_DLLAPI void ForwardDynamics (
 #else
     if (f_ext != NULL && (*f_ext)[i] != SpatialVector::Zero()) {
 #endif
-      LOG << "External force (" << i << ") = " << model.X_base[i].toMatrixAdjoint() * (*f_ext)[i] << std::endl;
+      RBDL_LOG << "External force (" << i << ") = " << model.X_base[i].toMatrixAdjoint() * (*f_ext)[i] << std::endl;
       model.pA[i] -= model.X_base[i].toMatrixAdjoint() * (*f_ext)[i];
     }
   }
 
   // ClearLogOutput();
 
-  LOG << "--- first loop ---" << std::endl;
+  RBDL_LOG << "--- first loop ---" << std::endl;
 
   for (i = model.mBodies.size() - 1; i > 0; i--) {
     unsigned int q_index = model.mJoints[i].q_index;
@@ -386,7 +386,7 @@ RBDL_DLLAPI void ForwardDynamics (
       model.U[i] = model.IA[i] * model.S[i];
       model.d[i] = model.S[i].dot(model.U[i]);
       model.u[i] = Tau[q_index] - model.S[i].dot(model.pA[i]);
-      //      LOG << "u[" << i << "] = " << model.u[i] << std::endl;
+      //      RBDL_LOG << "u[" << i << "] = " << model.u[i] << std::endl;
 
       unsigned int lambda = model.lambda[i];
       if (lambda != 0) {
@@ -412,7 +412,7 @@ RBDL_DLLAPI void ForwardDynamics (
           += model.X_lambda[i].applyTranspose(pa);
 #endif
 
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
           << model.pA[lambda].transpose() << std::endl;
       }
     } else if (model.mJoints[i].mDoFCount == 3
@@ -430,7 +430,7 @@ RBDL_DLLAPI void ForwardDynamics (
       model.multdof3_u[i] = tau_temp 
         - model.multdof3_S[i].transpose() * model.pA[i];
 
-      // LOG << "multdof3_u[" << i << "] = " 
+      // RBDL_LOG << "multdof3_u[" << i << "] = " 
       //                      << model.multdof3_u[i].transpose() << std::endl;
       unsigned int lambda = model.lambda[i];
       if (lambda != 0) {
@@ -460,7 +460,7 @@ RBDL_DLLAPI void ForwardDynamics (
         model.pA[lambda].noalias()
           += model.X_lambda[i].applyTranspose(pa);
 #endif
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
           << model.pA[lambda].transpose()
           << std::endl;
       }
@@ -483,7 +483,7 @@ RBDL_DLLAPI void ForwardDynamics (
       model.mCustomJoints[kI]->u = tau_temp
         - model.mCustomJoints[kI]->S.transpose() * model.pA[i];
 
-      //      LOG << "multdof3_u[" << i << "] = " 
+      //      RBDL_LOG << "multdof3_u[" << i << "] = " 
       //      << model.multdof3_u[i].transpose() << std::endl;
       unsigned int lambda = model.lambda[i];
       if (lambda != 0) {
@@ -508,7 +508,7 @@ RBDL_DLLAPI void ForwardDynamics (
           * model.X_lambda[i].toMatrix();
         model.pA[lambda].noalias() += model.X_lambda[i].applyTranspose(pa);
 #endif
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
           << model.pA[lambda].transpose()
           << std::endl;
       }
@@ -525,7 +525,7 @@ RBDL_DLLAPI void ForwardDynamics (
     SpatialTransform X_lambda = model.X_lambda[i];
 
     model.a[i] = X_lambda.apply(model.a[lambda]) + model.c[i];
-    LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
+    RBDL_LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
 
     if (model.mJoints[i].mDoFCount == 1
         && model.mJoints[i].mJointType != JointTypeCustom) {
@@ -556,7 +556,7 @@ RBDL_DLLAPI void ForwardDynamics (
     } 
   }
 
-  LOG << "QDDot = " << QDDot.transpose() << std::endl;
+  RBDL_LOG << "QDDot = " << QDDot.transpose() << std::endl;
 }
 
 RBDL_DLLAPI void ForwardDynamicsLagrangian (
@@ -569,7 +569,7 @@ RBDL_DLLAPI void ForwardDynamicsLagrangian (
     std::vector<SpatialVector> *f_ext,
     Math::MatrixNd *H,
     Math::VectorNd *C) {
-  LOG << "-------- " << __func__ << " --------" << std::endl;
+  RBDL_LOG << "-------- " << __func__ << " --------" << std::endl;
 
   bool free_H = false;
   bool free_C = false;
@@ -591,8 +591,8 @@ RBDL_DLLAPI void ForwardDynamicsLagrangian (
   InverseDynamics (model, Q, QDot, QDDot, (*C), f_ext);
   CompositeRigidBodyAlgorithm (model, Q, *H, false);
 
-  LOG << "A = " << std::endl << *H << std::endl;
-  LOG << "b = " << std::endl << *C * -1. + Tau << std::endl;
+  RBDL_LOG << "A = " << std::endl << *H << std::endl;
+  RBDL_LOG << "b = " << std::endl << *C * -1. + Tau << std::endl;
 
 #ifdef RBDL_USE_CASADI_MATH
     QDDot = H->inverse() * (*C * -1. + Tau);
@@ -611,7 +611,7 @@ RBDL_DLLAPI void ForwardDynamicsLagrangian (
       QDDot = H->llt().solve (*C * -1. + Tau);
       break;
     default:
-      LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
+      RBDL_LOG << "Error: Invalid linear solver: " << linear_solver << std::endl;
       assert (0);
       break;
   }
@@ -625,7 +625,7 @@ RBDL_DLLAPI void ForwardDynamicsLagrangian (
     delete H;
   }
 
-  LOG << "x = " << QDDot << std::endl;
+  RBDL_LOG << "x = " << QDDot << std::endl;
 }
 
 RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
@@ -634,8 +634,8 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
     VectorNd &QDDot,
     bool update_kinematics) {
 
-  LOG << "Q          = " << Q.transpose() << std::endl;
-  LOG << "---" << std::endl;
+  RBDL_LOG << "Q          = " << Q.transpose() << std::endl;
+  RBDL_LOG << "---" << std::endl;
 
   // Reset the velocity of the root body
   model.v[0].setZero();
@@ -668,7 +668,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
           && model.mJoints[i].mJointType != JointTypeCustom) {
         model.U[i] = model.IA[i] * model.S[i];
         model.d[i] = model.S[i].dot(model.U[i]);
-        //      LOG << "u[" << i << "] = " << model.u[i] << std::endl;
+        //      RBDL_LOG << "u[" << i << "] = " << model.u[i] << std::endl;
         unsigned int lambda = model.lambda[i];
 
         if (lambda != 0) {
@@ -697,7 +697,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
         model.multdof3_Dinv[i] = 
           (model.multdof3_S[i].transpose()*model.multdof3_U[i]).inverse().eval();
 #endif
-        //      LOG << "mCustomJoints[kI]->u[" << i << "] = "
+        //      RBDL_LOG << "mCustomJoints[kI]->u[" << i << "] = "
         //<< model.mCustomJoints[kI]->u[i].transpose() << std::endl;
 
         unsigned int lambda = model.lambda[i];
@@ -733,7 +733,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
             * model.mCustomJoints[kI]->U
             ).inverse().eval();
 #endif
-        //      LOG << "mCustomJoints[kI]->u[" << i << "] = "
+        //      RBDL_LOG << "mCustomJoints[kI]->u[" << i << "] = "
         //<< model.mCustomJoints[kI]->u.transpose() << std::endl;
         unsigned int lambda = model.lambda[i];
 
@@ -763,7 +763,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
         && model.mJoints[i].mJointType != JointTypeCustom) {
 
       model.u[i] = Tau[q_index] - model.S[i].dot(model.pA[i]);
-      // LOG << "u[" << i << "] = " << model.u[i] << std::endl;
+      // RBDL_LOG << "u[" << i << "] = " << model.u[i] << std::endl;
       unsigned int lambda = model.lambda[i];
       if (lambda != 0) {
         SpatialVector pa = model.pA[i] + model.U[i] * model.u[i] / model.d[i];
@@ -773,7 +773,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
 #else
         model.pA[lambda].noalias() += model.X_lambda[i].applyTranspose(pa);
 #endif
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
           << model.pA[lambda].transpose() << std::endl;
       }
     } else if (model.mJoints[i].mDoFCount == 3
@@ -784,7 +784,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
           Tau[q_index + 2]);
       model.multdof3_u[i] = tau_temp 
         - model.multdof3_S[i].transpose()*model.pA[i];
-      //      LOG << "multdof3_u[" << i << "] = "
+      //      RBDL_LOG << "multdof3_u[" << i << "] = "
       // << model.multdof3_u[i].transpose() << std::endl;
       unsigned int lambda = model.lambda[i];
 
@@ -800,7 +800,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
         model.pA[lambda].noalias() +=
           model.X_lambda[i].applyTranspose(pa);
 #endif
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
           << model.pA[lambda].transpose() << std::endl;
       }
     } else if (model.mJoints[i].mJointType == JointTypeCustom) {
@@ -810,7 +810,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
 
       model.mCustomJoints[kI]->u = 
         tau_temp - ( model.mCustomJoints[kI]->S.transpose()* model.pA[i]);
-      //      LOG << "mCustomJoints[kI]->u"
+      //      RBDL_LOG << "mCustomJoints[kI]->u"
       // << model.mCustomJoints[kI]->u.transpose() << std::endl;
       unsigned int lambda = model.lambda[i];
 
@@ -826,7 +826,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
         model.pA[lambda].noalias() +=
           model.X_lambda[i].applyTranspose(pa);
 #endif
-        LOG << "pA[" << lambda << "] = "
+        RBDL_LOG << "pA[" << lambda << "] = "
           << model.pA[lambda].transpose() << std::endl;
       }
     }
@@ -840,7 +840,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
     SpatialTransform X_lambda = model.X_lambda[i];
 
     model.a[i] = X_lambda.apply(model.a[lambda]) + model.c[i];
-    LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
+    RBDL_LOG << "a'[" << i << "] = " << model.a[i].transpose() << std::endl;
 
     if (model.mJoints[i].mDoFCount == 1
         && model.mJoints[i].mJointType != JointTypeCustom) {
@@ -873,7 +873,7 @@ RBDL_DLLAPI void CalcMInvTimesTau ( Model &model,
     }
   }
 
-  LOG << "QDDot = " << QDDot.transpose() << std::endl;
+  RBDL_LOG << "QDDot = " << QDDot.transpose() << std::endl;
 }
 
 } /* namespace RigidBodyDynamics */

@@ -256,7 +256,7 @@ RBDL_DLLAPI void CalcCenterOfMass (
 
   mass = Itot.m;
   com = Itot.h / mass;
-  LOG << "mass = " << mass << " com = " << com.transpose() << " htot = " <<
+  RBDL_LOG << "mass = " << mass << " com = " << com.transpose() << " htot = " <<
       htot.transpose() << std::endl;
 
   if (com_velocity) {
@@ -381,7 +381,7 @@ RBDL_DLLAPI Scalar CalcPotentialEnergy (
     update_kinematics);
 
   Vector3d g = - Vector3d (model.gravity[0], model.gravity[1], model.gravity[2]);
-  LOG << "pot_energy: " << " mass = " << mass << " com = " << com.transpose() <<
+  RBDL_LOG << "pot_energy: " << " mass = " << mass << " com = " << com.transpose() <<
       std::endl;
 
   return mass * com.dot(g);

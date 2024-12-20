@@ -94,11 +94,11 @@ TEST_CASE_METHOD(FloatingBaseFixture,
 
   unsigned int i;
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a.at(i) << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a.at(i) << endl;
   }
 
   //	std::cout << LogOutput.str() << std::endl;
@@ -116,11 +116,11 @@ TEST_CASE_METHOD(FloatingBaseFixture,
   ForwardDynamics(*model, Q, QDot, Tau, QDDot);
 
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a.at(i) << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a.at(i) << endl;
   }
 
   //	std::cout << LogOutput.str() << std::endl;
@@ -145,11 +145,11 @@ TEST_CASE_METHOD(FloatingBaseFixture,
   ForwardDynamics(*model, Q, QDot, Tau, QDDot);
 
   for (i = 0; i < QDDot.size(); i++) {
-    LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
+    RBDL_LOG << "QDDot[" << i << "] = " << QDDot[i] << endl;
   }
 
   for (i = 0; i < model->a.size(); i++) {
-    LOG << "a[" << i << "]     = " << model->a.at(i) << endl;
+    RBDL_LOG << "a[" << i << "]     = " << model->a.at(i) << endl;
   }
 
   //	std::cout << LogOutput.str() << std::endl;
@@ -196,7 +196,7 @@ TEST_CASE_METHOD(FloatingBaseFixture,
              AllCloseVector(point_velocity, TEST_PREC, TEST_PREC)
   );
 
-  LOG << "Point velocity = " << point_velocity << endl;
+  RBDL_LOG << "Point velocity = " << point_velocity << endl;
   //	cout << LogOutput.str() << endl;
 
   ClearLogOutput();
@@ -212,7 +212,7 @@ TEST_CASE_METHOD(FloatingBaseFixture,
              AllCloseVector(point_velocity, TEST_PREC, TEST_PREC)
   );
 
-  LOG << "Point velocity = " << point_velocity << endl;
+  RBDL_LOG << "Point velocity = " << point_velocity << endl;
   //	cout << LogOutput.str() << endl;
 
   // Now we calculate the velocity when rotating around the Z axis and the
@@ -227,7 +227,7 @@ TEST_CASE_METHOD(FloatingBaseFixture,
              AllCloseVector(point_velocity, TEST_PREC, TEST_PREC)
   );
 
-  LOG << "Point velocity = " << point_velocity << endl;
+  RBDL_LOG << "Point velocity = " << point_velocity << endl;
   //	cout << LogOutput.str() << endl;
 }
 
