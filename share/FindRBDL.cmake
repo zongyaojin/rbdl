@@ -42,7 +42,15 @@ IF(CUSTOM_RBDL_PATH)
     NO_DEFAULT_PATH
     )
 
-  FIND_PATH (RBDL_URDFREADER_INCLUDE_DIR rbdl/addons/urdfreader/urdfreader.h
+  FIND_PATH (RBDL_URDFREADER_INCLUDE_DIR 
+    rbdl/addons/urdfreader/urdfreader.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/tinyxml/txml.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/common.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/exception.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/geometry.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/joint.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/link.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/model.h
     PATHS
     ${CUSTOM_RBDL_PATH}/include
     NO_DEFAULT_PATH
@@ -126,7 +134,15 @@ ELSE(CUSTOM_RBDL_PATH)
     /usr/lib/x86_64-linux-gnu
     )
 
-  FIND_PATH (RBDL_URDFREADER_INCLUDE_DIR rbdl/addons/urdfreader/urdfreader.h
+  FIND_PATH (RBDL_URDFREADER_INCLUDE_DIR 
+    rbdl/addons/urdfreader/urdfreader.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/tinyxml/txml.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/common.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/exception.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/geometry.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/joint.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/link.h
+    rbdl/addons/urdfreader/thirdparty/urdfparser/include/urdf/model.h
     HINTS
     $ENV{HOME}/local/include
     $ENV{RBDL_PATH}/src
