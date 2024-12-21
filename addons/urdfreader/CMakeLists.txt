@@ -122,3 +122,21 @@ INSTALL ( FILES ${headers}
 	DESTINATION
 	${CMAKE_INSTALL_INCLUDEDIR}/rbdl/addons/urdfreader
 	)
+
+FILE ( GLOB urdf_headers
+  "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/urdfparser/include/urdf/*.h"
+  )
+
+INSTALL ( FILES ${urdf_headers} 
+  DESTINATION
+  ${CMAKE_INSTALL_INCLUDEDIR}/rbdl/addons/urdfreader/urdf
+  )
+
+FILE ( GLOB urdf_headers
+  "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/urdfparser/include/tinyxml/*.h"
+  )
+
+INSTALL ( FILES ${urdf_headers} 
+  DESTINATION
+  ${CMAKE_INSTALL_INCLUDEDIR}/rbdl/addons/urdfreader/tinyxml
+  )
